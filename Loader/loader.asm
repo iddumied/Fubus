@@ -9,12 +9,12 @@ mov   sp, 0             ; stackpointer
 sti                     ; allow interrupts
 
 ; save bootdevice from dl
-mov   [bootdrv], dl
+mov   [bootdev], dl
 
 ; reset bootdevice
 reset:
 mov   ax, 0x0          ; interrupts option 0 = reset device
-mov   dl, [bootdevice] ; device is bootdevice
+mov   dl, [bootdev]    ; device is bootdevice
 int   0x13             ; call bios interupt 13h
 jc    reset            ; fail? try again
 
@@ -30,7 +30,7 @@ mov   ah, 0x2           ; read Sector
 mov   al, 0xA           ; read 10 sectors
 mov   cx, 0x2           ; Cylinder 0 (ch), Sector 2 (cl)
 mov   dh, 0             ; Head 0
-mov   dl, [bootdrv]     ; bootdevice           
+mov   dl, [bootdev]     ; bootdevice           
 int   0x13              ; call bios interupt 13h
 jc    read_sector       ; fail? try again
 
@@ -79,7 +79,7 @@ mov   ah, 0x86          ; Wait function
 int   0x15              ; call bios interupt 15h
 ret                     ; return
 
-bootdrv db 0            ; the bootdevice
+bootdev db 0            ; the bootdevice
 loadmsg db 'Kernel loaded starting ...', 0 ; load message
 
 times 510 - ($ - $$) db 0
