@@ -8,6 +8,10 @@ mov   si, addressmsg
 call  print_str
 mov   si, addressmsg
 call  print_binar
+
+mov   al, 0x20
+call  print_char
+call  print_hex
 loop: jmp loop
 
 
@@ -63,6 +67,48 @@ jz    print_binar_exit
 jmp   print_binar_next_chr
 print_binar_exit:
 ret
+
+; print an 16 bit value from si
+print_hex:
+mov   ax, 0xF000        ; first the highest 4 Bits
+and   ax, si            ;             
+shr   ax, 12            ; now we hav the ighest 4 bit
+call  print_hex_chr
+
+mov   ax, 0x0F00
+and   ax, si
+shr   ax, 8
+call  print_hex_chr
+
+mov   ax, 0x00F0
+and   ax, si
+shr   ax, 4
+call  print_hex_chr
+
+mov   ax, 0x000F
+and   ax, si
+call  print_hex_chr
+ret
+
+
+; prints an hex value from ax
+print_hex_chr:
+cmp   ax, 0xA           ; if ax >= 0xA
+jge   print_hex_chr_A   ;
+
+move  al, 0x30          ; else, al = '0'
+add   al, ax            ; al + ax
+call print_char         ;
+jmp print_hex_chr_exit  ;
+
+print_hex_chr_A:        
+mov   al, 0x41          ; start bei al = 'A'
+sub   ax, 0xA           ; ax - 10
+add   al, ax            ; al + ax
+call  print_char
+
+print_hex_chr_exit:     ; return
+ret                     ;
 
 
 kernelmsg  db 'Kernel succesfull started', 0x0A, 0x0D, 0
