@@ -1,6 +1,13 @@
 [bits 16]
 [org 0x7c00]
 
+; init datasegment pointer
+mov ax, 0x0000
+mov ds, ax
+
+mov   si, msg1          ; load str address
+call  print_str         ; 
+
 ; create a stack
 cli                     ; disable interrupts
 mov   ax, 0x9000        ; stack address
@@ -11,6 +18,9 @@ sti                     ; allow interrupts
 ; save bootdevice from dl
 mov   [bootdev], dl
 
+mov   si, msg2          ; load str address
+call  print_str         ; 
+
 ; reset bootdevice
 reset:
 mov   ax, 0x0          ; interrupts option 0 = reset device
@@ -18,6 +28,8 @@ mov   dl, [bootdev]    ; device is bootdevice
 int   0x13             ; call bios interupt 13h
 jc    reset            ; fail? try again
 
+mov   si, msg3          ; load str address
+call  print_str         ; 
 
 ; load the Kernel from Bootdevice
 read_sector:
@@ -81,6 +93,9 @@ ret                     ; return
 
 bootdev db 0            ; the bootdevice
 loadmsg db 'Kernel loaded starting ...', 0 ; load message
+msg1    db 'init Stack', 0x0A, 0x0D, 0
+msg2    db 'init Boot Device', 0x0A, 0x0D, 0
+msg3    db 'load the kernel', 0x0A, 0x0D, 0
 
 times 510 - ($ - $$) db 0
 dw 0xAA55
