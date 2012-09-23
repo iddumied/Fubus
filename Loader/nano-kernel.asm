@@ -3,7 +3,11 @@
 
 ;print message and HALT
 mov   si, kernelmsg
-call  print_char
+call  print_str
+mov   si, addressmsg
+call  print_str
+mov   si, addressmsg
+call  print_binar
 loop: jmp loop
 
 
@@ -38,4 +42,28 @@ mov   ah, 0x86          ; Wait function
 int   0x15              ; call bios interupt 15h
 ret                     ; return
 
-kernelmsg  db 'Kernel succesfull started', 0
+; print an 16 bit value from si
+print_binar:
+print_binar_next_chr:
+mov   ax, 0x8000        ; MSB of 16 bit = 1
+and   ax, si            ; if si[0] == 0 
+jz    print_binar0      ; 
+mov   al, 0x31          ; print 1    
+call  print_char        ;
+jmp   print_binar_next  ; 
+
+print_binar0:           ;
+mov   al, 0x30          ; print 0
+call  print_char        ;
+
+print_binar_next:
+shl   si, 1             ; si << 1 (shift si left)
+or    si, si            ; if si == 0 return
+jz    print_binar_exit
+jmp   print_binar_next_chr
+print_binar_exit:
+ret
+
+
+kernelmsg  db 'Kernel succesfull started', 0x0A, 0x0D, 0
+addressmsg db 'This String is at Address: ', 0

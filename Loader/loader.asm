@@ -54,9 +54,9 @@ mov   dx, 0x8480        ;
 call  sleep             ;
 
 ; jump to kernel code
-mov   ax, 0x1000        ; start adress of the kernel code
-mov   es, ax            ; update extra data pointer
-mov   ds, ax            ; update data pointer
+;mov   ax, 0x1000        ; start adress of the kernel code
+;mov   es, ax            ; update extra data pointer
+;mov   ds, ax            ; update data pointer
 jmp   0x1000:0x0000     ; jump to kernel code
 
 
@@ -92,7 +92,7 @@ int   0x15              ; call bios interupt 15h
 ret                     ; return
 
 bootdev db 0            ; the bootdevice
-loadmsg db 'Kernel loaded starting ...', 0 ; load message
+loadmsg db 'Kernel loaded starting ...', 0x0A, 0x0D, 0 ; load message
 msg1    db 'init Stack', 0x0A, 0x0D, 0
 msg2    db 'init Boot Device', 0x0A, 0x0D, 0
 msg3    db 'load the kernel', 0x0A, 0x0D, 0
