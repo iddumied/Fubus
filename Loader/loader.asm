@@ -19,7 +19,7 @@ int   0x13             ; call bios interupt 13h
 jc    reset            ; fail? try again
 
 
-; read a sector
+; load the Kernel from Bootdevice
 read_sector:
 mov   ax, 0x1000        ;
 mov   es, ax            ; Adress of readbuffer = ES:BX = 0x1000
@@ -34,8 +34,18 @@ mov   dl, [bootdrv]     ; bootdevice
 int   0x13              ; call bios interupt 13h
 jc    read_sector       ; fail? try again
 
-; load the kernel
-load:
+; print boot message
+mov   si, loadmsg       ; load str address
+call  print_str         ; 
+mov   cx, 0x001e        ; sleep 2s
+mov   dx, 0x8480        ;
+call  sleep             ;
+
+; jump to kernel code
+mov   ax, 0x1000        ; start adress of the kernel code
+mov   es, ax            ; update extra data pointer
+mov   ds, ax            ; update data pointer
+jmp   0x1000:0x0000     ; jump to kernel code
 
 
 ; +---------------------+
