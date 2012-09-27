@@ -11,6 +11,11 @@ call  print_binar
 
 mov   al, 0x20
 call  print_char
+mov   si, addressmsg
+call  print_hex
+mov   al, 0x20
+call  print_char
+lea   si, [hex]
 call  print_hex
 loop: jmp loop
 
@@ -70,46 +75,60 @@ ret
 
 ; print an 16 bit value from si
 print_hex:
-mov   ax, 0xF000        ; first the highest 4 Bits
-and   ax, si            ;             
-shr   ax, 12            ; now we hav the ighest 4 bit
+mov   ax, 0xF000
+mov   [hex], ax            ; first the highest 4 Bits
+and   [hex], si            ;             
+mov   ax, [hex]
+shr   ax, 12
+mov   [hex], ax
 call  print_hex_chr
 
 mov   ax, 0x0F00
-and   ax, si
+mov   [hex], ax
+and   [hex], si
+mov   ax, [hex]
 shr   ax, 8
+mov   [hex], ax
 call  print_hex_chr
 
 mov   ax, 0x00F0
-and   ax, si
-shr   ax, 4
+mov   [hex], ax
+and   [hex], si
+shr   [hex], 4
 call  print_hex_chr
 
 mov   ax, 0x000F
-and   ax, si
+mov   [hex], ax
+and   [hex], si
 call  print_hex_chr
 ret
 
 
-; prints an hex value from ax
+; prints an hex value from [hex]
 print_hex_chr:
-cmp   ax, 0xA           ; if ax >= 0xA
+mov   ax, [hex]
+and   ax, 0x000F
+mov   [hex], ax
+
+mov   ax, 0xA     
+cmp   [hex], ax         ; if hex >= 0xA
 jge   print_hex_chr_A   ;
 
-move  al, 0x30          ; else, al = '0'
-add   al, ax            ; al + ax
+mov   ax, 0x30          ; else, al = '0'
+add   ax, [hex]         ; al + ax
 call print_char         ;
 jmp print_hex_chr_exit  ;
 
 print_hex_chr_A:        
-mov   al, 0x41          ; start bei al = 'A'
-sub   ax, 0xA           ; ax - 10
-add   al, ax            ; al + ax
+mov   ax, 0x41          ; start bei al = 'A'
+sub   ax, 0xA    
+add   ax, [hex]         
 call  print_char
 
 print_hex_chr_exit:     ; return
 ret                     ;
 
-
+tmp        dw  0
+hex        dw  0
 kernelmsg  db 'Kernel succesfull started', 0x0A, 0x0D, 0
 addressmsg db 'This String is at Address: ', 0
