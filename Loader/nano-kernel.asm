@@ -1,5 +1,5 @@
 [bits 16]
-[org 0x1000]    ; Kernel code will be loaded to 0x1000
+;[org 0x1000]    ; not neddedt, because loader sets data pointer
 
 ;print message and HALT
 mov   si, kernelmsg

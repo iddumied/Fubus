@@ -2,8 +2,9 @@
 [org 0x7c00]
 
 ; init datasegment pointer
-mov ax, 0x0000
-mov ds, ax
+mov   ax, 0x0000
+mov   es, ax
+mov   ds, ax
 
 mov   si, msg1          ; load str address
 call  print_str         ; 
@@ -54,9 +55,9 @@ mov   dx, 0x8480        ;
 call  sleep             ;
 
 ; jump to kernel code
-;mov   ax, 0x1000        ; start adress of the kernel code
-;mov   es, ax            ; update extra data pointer
-;mov   ds, ax            ; update data pointer
+mov   ax, 0x1000        ; start adress of the kernel code
+mov   es, ax            ; update extra data pointer
+mov   ds, ax            ; update data pointer
 jmp   0x1000:0x0000     ; jump to kernel code
 
 
