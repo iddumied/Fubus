@@ -13,10 +13,6 @@ mov   al, 0x20
 call  print_char
 mov   si, addressmsg
 call  print_hex
-mov   al, 0x20
-call  print_char
-lea   si, [hex]
-call  print_hex
 loop: jmp loop
 
 

@@ -50,9 +50,9 @@ jc    read_sector       ; fail? try again
 ; print boot message
 mov   si, loadmsg       ; load str address
 call  print_str         ; 
-mov   cx, 0x001e        ; sleep 2s
-mov   dx, 0x8480        ;
-call  sleep             ;
+;mov   cx, 0x001e        ; sleep 2s
+;mov   dx, 0x8480        ;
+;call  sleep             ;
 
 ; jump to kernel code
 mov   ax, 0x1000        ; start adress of the kernel code
